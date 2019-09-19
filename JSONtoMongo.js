@@ -8,6 +8,32 @@ var fs = require('fs'),
     Schema = mongoose.Schema, 
     Listing = require('./ListingSchema.js'), 
     config = require('./config');
+var listingData
+
+
+mongoose.connect(config.db.uri, { useNewUrlParser: true });
+
+fs.readFile('listings.json', 'utf8', function (err, data) {
+    if (err) {
+        throw err;
+    }
+    listingData = JSON.parse(data).entries;
+    var tempy;
+
+
+
+    listingData.forEach(function (element) {
+         tempy = new Listing({ code: element.code, name: element.name, coordinates: element.coordinates, address: element.address }).save(function (err) {
+            if (err) throw err;
+            console.log("listings++");
+        });
+
+    });
+});
+
+
+    
+
 
 /* Connect to your database using mongoose - remember to keep your key secret*/
 //see https://mongoosejs.com/docs/connections.html
@@ -26,3 +52,4 @@ var fs = require('fs'),
   Check to see if it works: Once you've written + run the script, check out your MongoLab database to ensure that 
   it saved everything correctly. 
  */
+
